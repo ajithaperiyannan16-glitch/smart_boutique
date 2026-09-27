@@ -171,24 +171,34 @@ app.post('/api/appointments/bespoke', async (req, res, next) => {
 });
 
 // -------------------------------------------------------------
-// Analytics & Event Tracking Routes (ADDED HERE)
+// Analytics & Event Tracking Routes
 // -------------------------------------------------------------
 
 /**
  * @route   POST /api/analytics/log
- * @desc    Log customer search & interaction events
+ * @desc    Collect user interactions from webpage and insert into analytics_events table
  */
 app.post('/api/analytics/log', async (req, res, next) => {
     try {
         const { eventType, bodyShape, preferredStyle, productId } = req.body;
 
-        await db.execute(
-            `INSERT INTO analytics_events (event_type, body_shape, preferred_style, product_id)
-             VALUES (?, ?, ?, ?)`,
-            [eventType, bodyShape || null, preferredStyle || null, productId || null]
-        );
+        const insertQuery = `
+            INSERT INTO analytics_events (event_type, body_shape, preferred_style, product_id)
+            VALUES (?, ?, ?, ?)
+        `;
 
-        res.status(201).json({ success: true, message: 'Event logged successfully.' });
+        const [result] = await db.execute(insertQuery, [
+            eventType,
+            bodyShape || null,
+            preferredStyle || null,
+            productId || null
+        ]);
+
+        res.status(201).json({
+            success: true,
+            message: 'Interaction logged directly to MySQL database.',
+            insertedId: result.insertId
+        });
     } catch (error) {
         next(error);
     }
@@ -200,7 +210,6 @@ app.post('/api/analytics/log', async (req, res, next) => {
  */
 app.get('/api/analytics/dashboard', async (req, res, next) => {
     try {
-        // Query 1: Most searched body shapes
         const [bodyShapeStats] = await db.execute(`
             SELECT body_shape, COUNT(*) AS total_searches 
             FROM analytics_events 
@@ -209,14 +218,12 @@ app.get('/api/analytics/dashboard', async (req, res, next) => {
             ORDER BY total_searches DESC
         `);
 
-        // Query 2: Appointment breakdown by service type
         const [appointmentStats] = await db.execute(`
             SELECT service_type, COUNT(*) AS total_bookings
             FROM appointments
             GROUP BY service_type
         `);
 
-        // Query 3: Product inventory catalog distribution
         const [productFitDistribution] = await db.execute(`
             SELECT recommended_shape, COUNT(*) AS item_count
             FROM products
