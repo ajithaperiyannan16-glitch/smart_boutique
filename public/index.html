@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA | Virtual Styling & Bespoke Boutique</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header>
+    <h1>A U R A</h1>
+    <p>Smart Fit Matcher & Bespoke Tailoring Experience</p>
+</header>
+
+<main class="app-container">
+    <!-- Sidebar: Controls & Booking -->
+    <aside>
+        <!-- Virtual Fit Control Panel -->
+        <div class="card">
+            <h3>Smart Fit Engine</h3>
+            <form id="fitForm">
+                <div class="form-group">
+                    <label for="bodyShape">Body Silhouette</label>
+                    <select id="bodyShape" class="form-control" required>
+                        <option value="Hourglass">Hourglass</option>
+                        <option value="Pear">Pear</option>
+                        <option value="Rectangle">Rectangle</option>
+                        <option value="Inverted Triangle">Inverted Triangle</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="preferredStyle">Style Preference</label>
+                    <input type="text" id="preferredStyle" class="form-control" placeholder="e.g. Satin, Silk, Blazer">
+                </div>
+
+                <button type="submit" class="btn-primary">Find Matching Fits</button>
+            </form>
+        </div>
+
+        <br>
+
+        <!-- Bespoke Appointment Booking Panel -->
+        <div class="card">
+            <h3>Book Bespoke Fitting</h3>
+            <form id="appointmentForm">
+                <div class="form-group">
+                    <label for="serviceType">Service Type</label>
+                    <select id="serviceType" class="form-control" required>
+                        <option value="Custom Fitting">Custom Fitting</option>
+                        <option value="Personal Styling">Personal Styling</option>
+                        <option value="Alteration">Alteration</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="appointmentDate">Date & Time</label>
+                    <input type="datetime-local" id="appointmentDate" class="form-control" required>
+                </div>
+
+                <button type="submit" class="btn-primary">Confirm Appointment</button>
+            </form>
+            <p id="bookingStatus" style="font-size:0.85rem; margin-top:10px;"></p>
+        </div>
+    </aside>
+
+    <!-- Main Content Area: Catalog Display -->
+    <section class="card">
+        <h3>Recommended Collection</h3>
+        <div id="productGrid" class="product-grid">
+            <!-- Dynamic product cards will be injected here via app.js -->
+        </div>
+    </section>
+</main>
+
+<script src="/js/app.js"></script>
+</body>
+</html>
